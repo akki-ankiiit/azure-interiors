@@ -223,7 +223,7 @@ export default function Footer() {
                     </div>
                     <div className="u-12" />
                     <div data-text="p" className="l1 reg a-right">
-                      Designed with
+                      Designed by
                     </div>
                     <div data-text="p">
                       <a
@@ -235,12 +235,12 @@ export default function Footer() {
                         <div className="nav-item_label">
                           <div className="nav-item_label_text">
                             <div hover="text" className="l1">
-                              Indian soul
+                              Ankit Chandrakar
                             </div>
                           </div>
                           <div className="nav-item_label_text is-2">
                             <div hover="text" className="l1">
-                              Indian soul
+                              Ankit Chandrakar
                             </div>
                           </div>
                         </div>

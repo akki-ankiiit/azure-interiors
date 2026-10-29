@@ -16,7 +16,7 @@ test("homepage renders, scrolls, and loads its image assets", async ({
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await openPage(page);
-  await expect(page.locator(".hero-s h1")).toHaveText("Era Residence");
+  await expect(page.locator(".hero-s h1")).toHaveText(/Azure\s*Interiors/);
   await expect(page.locator(".hero-s h1")).toBeVisible();
   await expect
     .poll(() =>
@@ -39,10 +39,7 @@ test("day/night scene control crossfades the hero", async ({
   page,
   isMobile,
 }) => {
-  test.skip(
-    isMobile,
-    "The reference intentionally hides day/night controls on mobile.",
-  );
+  test.skip(isMobile, "The day/night controls are hidden on mobile.");
   await openPage(page);
   await page.locator('[data-tab-trigger="night"]').click();
   await expect(page.locator('[data-tab-trigger="night"]')).toHaveClass(
@@ -52,23 +49,27 @@ test("day/night scene control crossfades the hero", async ({
     "opacity",
     "1",
   );
-  await page.locator('[data-tab-trigger="day"]').click();
-  await expect(page.locator('[data-tab-trigger="day"]')).toHaveClass(
-    /is-active/,
-  );
+  // The engine ignores clicks while a crossfade is running, so retry until it settles.
+  await expect(async () => {
+    await page.locator('[data-tab-trigger="day"]').click();
+    await expect(page.locator('[data-tab-trigger="day"]')).toHaveClass(
+      /is-active/,
+      { timeout: 1000 },
+    );
+  }).toPass({ timeout: 10000 });
 });
 
-test("apartment filtering honors deep links and reset", async ({ page }) => {
-  await openPage(page, "/apartments?type=ground-floor");
+test("project filtering honors deep links and reset", async ({ page }) => {
+  await openPage(page, "/projects?type=villas");
   const visibleCards = page.locator("[data-filter-item]:visible");
   await expect.poll(() => visibleCards.count()).toBeGreaterThan(0);
-  await expect.poll(() => visibleCards.count()).toBeLessThan(25);
+  await expect.poll(() => visibleCards.count()).toBeLessThan(12);
   const types = await visibleCards
     .locator("[data-type]")
     .evaluateAll((elements) => elements.map((el) => el.dataset.type));
-  expect(types.every((type) => type === "ground-floor")).toBe(true);
+  expect(types.every((type) => type === "villas")).toBe(true);
   await page.locator("[data-reset]").click();
-  await expect(visibleCards).toHaveCount(25);
+  await expect(visibleCards).toHaveCount(12);
 });
 
 test("booking modal validates and explains unconfigured submission", async ({
@@ -84,10 +85,10 @@ test("booking modal validates and explains unconfigured submission", async ({
   await expect(form).toBeVisible();
   await form.locator('input[name="name"]').fill("Alex Morgan");
   await form.locator('input[type="email"]').fill("alex@example.com");
-  await form.locator('input[type="tel"]').fill("+34600123456");
+  await form.locator('input[type="tel"]').fill("+916260906952");
   const message = form.locator("textarea");
   if (await message.count())
-    await message.fill("I would like to book a viewing.");
+    await message.fill("I would like to discuss a project.");
   await form.locator("[data-form-btn]").click();
   await expect(form.locator("[data-form-status]")).toContainText(
     "not connected yet",
@@ -96,20 +97,25 @@ test("booking modal validates and explains unconfigured submission", async ({
   await expect(form).toBeHidden();
 });
 
-test("client navigation, detail pages, and browser back remain functional", async ({
+test("client navigation, project pages, and browser back remain functional", async ({
   page,
   isMobile,
 }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await openPage(page, "/apartments");
-  await page.locator('a[href="/apartments/011"]').first().click();
-  await expect(page).toHaveURL(/\/apartments\/011$/);
-  await expect(page.locator(".lot-w h1")).toHaveText("No. 011");
+  await openPage(page, "/projects");
+  await page
+    .locator('a[href="/projects/the-malabar-residence"]')
+    .first()
+    .click();
+  await expect(page).toHaveURL(/\/projects\/the-malabar-residence$/);
+  await expect(page.locator("h1.project-title")).toHaveText(
+    "The Malabar Residence",
+  );
   await expect(page.locator("[data-experience-ready]")).toBeAttached();
   await page.goBack();
-  await expect(page).toHaveURL(/\/apartments$/);
-  await expect(page.locator("[data-filter-item]:visible")).toHaveCount(25);
+  await expect(page).toHaveURL(/\/projects$/);
+  await expect(page.locator("[data-filter-item]:visible")).toHaveCount(12);
   if (isMobile) {
     await page.locator("[data-modal-menu-btn]").click();
     await page.locator('[data-modal-menu] a[href="/contact"]').click();

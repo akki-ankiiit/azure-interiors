@@ -1,4 +1,4 @@
-import BrandSeal from "../layout/BrandSeal";
+import BrandSeal from "./BrandSeal";
 /** Migrated reference markup. Interactions are managed by useSiteExperience. */
 export default function HeaderLogo() {
   return (

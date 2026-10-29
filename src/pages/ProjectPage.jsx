@@ -1,6 +1,6 @@
 import StudioLayout from '../components/layout/StudioLayout';
 import ProjectCard from '../components/portfolio/ProjectCard';
-import ImageLightbox from '../components/apartments/details/ImageLightbox';
+import ImageLightbox from '../components/layout/ImageLightbox';
 import { projects } from '../data/projects';
 import { image, photography } from '../data/media';
 

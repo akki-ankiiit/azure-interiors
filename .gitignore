@@ -1,6 +1,24 @@
+# Dependencies
 node_modules/
+
+# Build output
 dist/
+
+# Test output
 test-results/
 playwright-report/
-.DS_Store
+blob-report/
+
+# Environment
+.env
 .env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+*.log
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

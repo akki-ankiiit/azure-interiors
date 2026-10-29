@@ -137,8 +137,8 @@ export default function Architecture() {
               <div data-desk="off" data-parallax="w" className="img-w">
                 <img
                   className="img"
-                  src="/assets/interiors/courtyard.webp"
-                  alt="Airy living space opening onto a landscaped courtyard"
+                  src="/assets/interiors/bedroom.webp"
+                  alt="Warm timber bedroom with carved wall art opening onto a planted courtyard"
                   data-parallax="img"
                   loading="eager"
                 />

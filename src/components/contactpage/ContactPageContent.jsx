@@ -161,7 +161,7 @@ export default function ContactPageContent() {
                         <a
                           hover-nav-item=""
                           aria-label="Whatsapp"
-                          href="https://wa.me/34655408648"
+                          href="https://wa.me/916260906952"
                           className="nav-item w-inline-block"
                         >
                           <div className="nav-item_label">
